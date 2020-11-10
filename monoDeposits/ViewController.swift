@@ -28,10 +28,12 @@ class ViewController: UIViewController {
     @IBOutlet weak var closeDepositAnyTimeSwitcher: UISwitch!
     @IBOutlet weak var createDepositButton: UIButton!
     
+    var monthes: Int = 12
+    
     
     // создать енам с длительностю депозита и соответствующими ставками
     // сначала для гривны: чтобы отточить функционал, потом для доллара и евро
-
+    
     let uahMonthes = [
         "1": 8,
         "2": 8,
@@ -63,42 +65,66 @@ class ViewController: UIViewController {
     ]
     
     let euroMonthes = [
-        "1": 1,
-        "2": 1,
-        "3": 1.25,
-        "4": 1.25,
-        "5": 1.25,
-        "6": 1.5,
-        "7": 1.5,
-        "8": 1.5,
-        "9": 1.75,
-        "10": 1.75,
-        "11": 1.75,
-        "12": 2
+        "1": 0.25,
+        "2": 0.25,
+        "3": 0.5,
+        "4": 0.5,
+        "5": 0.5,
+        "6": 0.75,
+        "7": 0.75,
+        "8": 0.75,
+        "9": 1,
+        "10": 1,
+        "11": 1,
+        "12": 1.25
     ]
     
     
-
+    
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-//        uahButton.setTitle("Гривна ✔", for: .selected)
-//        dollarButton.setTitle("Доллар ✔", for: .selected)
-//        euroButton.setTitle("Евро ✔", for: .selected)
+        monthes = Int(monthStepper.value)
+        setup(monthes: monthes)
         
     }
     
     @IBAction func monthStepperValueChanged(_ sender: UIStepper) {
         
-        let monthes = Int(monthStepper.value)
-
+        monthes = Int(monthStepper.value)
+        setup(monthes: monthes)
+        
+    }
+    
+    func setup(monthes: Int){
+        
         stepperMonthLabel.text = "\(monthes) месяцев"
         
-        for (key, value) in uahMonthes {
-            if String(monthes) == key{
-                percentLabel.text = "\(value) %"
-                stepperPercentLabel.text = "Процентная ставка \(value) %"
+        // uah button is selected
+        if uahButton.isSelected == true {
+            
+            for (key, value) in uahMonthes {
+                if String(monthes) == key{
+                    percentLabel.text = "\(value) %"
+                    stepperPercentLabel.text = "Процентная ставка \(value) %"
+                }
+            }
+            // dollar button is selected
+        } else if dollarButton.isSelected == true {
+            for (key, value) in dollarMonthes {
+                if String(monthes) == key{
+                    percentLabel.text = "\(value) %"
+                    stepperPercentLabel.text = "Процентная ставка \(value) %"
+                }
+            }
+            // euro button is selected
+        } else {
+            for (key, value) in euroMonthes {
+                if String(monthes) == key{
+                    percentLabel.text = "\(value) %"
+                    stepperPercentLabel.text = "Процентная ставка \(value) %"
+                }
             }
         }
     }
@@ -110,9 +136,9 @@ class ViewController: UIViewController {
         }
     }
     
-
+    
     // Logic for one of three buttons to be selected
-
+    
     @IBAction func uahButtonTapped(_ sender: UIButton) {
         if uahButton.isSelected {
             // set deselected
@@ -122,6 +148,7 @@ class ViewController: UIViewController {
             uahButton.isSelected = true
             dollarButton.isSelected = false
             euroButton.isSelected = false
+            setup(monthes: monthes)
         }
     }
     
@@ -134,6 +161,7 @@ class ViewController: UIViewController {
             dollarButton.isSelected = true
             uahButton.isSelected = false
             euroButton.isSelected = false
+            setup(monthes: monthes)
         }
     }
     @IBAction func euroButtonTapped(_ sender: UIButton) {
@@ -145,6 +173,7 @@ class ViewController: UIViewController {
             euroButton.isSelected = true
             uahButton.isSelected = false
             dollarButton.isSelected = false
+            setup(monthes: monthes)
         }
     }
     
